@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @Controller
 public class SimpleController {
@@ -32,12 +33,11 @@ public class SimpleController {
 	HttpServletRequest request, 
 	 RestTemplateBuilder builder) {
 		// Record the visit for other functions to react to.
-
 		/*
 		CloudEvent ce = CloudEventBuilder.fromSpecVersion(SpecVersion.V1)
 			.withType("com.example.bite")
 			.withId(UUID.randomUUID().toString())
-			.withSource(new URI("http", host, "/"))
+			.withSource(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri())
 			.withData("text/plain", request.getRemoteHost().getBytes(StandardCharsets.UTF_8))
 			.build();
 
@@ -49,7 +49,6 @@ public class SimpleController {
 				.body(ce.getData()),
 			byte[].class);
 		*/
-
 		return "done";
 	}
 
