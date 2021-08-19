@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
@@ -23,9 +24,10 @@ import org.springframework.web.client.RestTemplate;
 @Controller
 public class SimpleController {
 
-	const String brokerUrl = "http://broker-ingress.knative-eventing.svc.cluster.local/default/default";
+	static final String brokerUrl = "http://broker-ingress.knative-eventing.svc.cluster.local/default/default";
 
 	@GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
+	@Autowired
 	public @ResponseBody String get(@RequestHeader("Host") String host,
 	HttpServletRequest request, 
 	 RestTemplateBuilder builder) {
