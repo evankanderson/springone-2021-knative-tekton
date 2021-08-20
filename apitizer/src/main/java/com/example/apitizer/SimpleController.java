@@ -50,7 +50,7 @@ public class SimpleController {
 		if (sentEvent.getStatusCode().isError()) {
 			throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Unable to store event");
 		}
-		logger.info("Submitted to %s, got %d", brokerUrl, sentEvent.getStatusCode().value());
+		logger.info("Submitted to {}, got {}", brokerUrl, sentEvent.getStatusCode().value());
 
 		return "done";
 	}

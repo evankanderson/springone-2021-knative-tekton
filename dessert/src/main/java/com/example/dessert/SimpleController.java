@@ -26,7 +26,7 @@ public class SimpleController {
 		try {
 			logger.info(mapper.writeValueAsString(event));
 		} catch (JsonProcessingException e) {
-			logger.info("Failed to format JSON: %s", e.getMessage());
+			logger.info("Failed to format JSON: {}", e.getMessage());
 		}
 
 		return "Accepted";
