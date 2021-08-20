@@ -27,11 +27,14 @@ public class SimpleController {
 
 	static final String brokerUrl = "http://broker-ingress.knative-eventing.svc.cluster.local/default/default";
 
+@Autowired
+RestTemplateBuilder builder;
+
 	@GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
 	@Autowired
-	public @ResponseBody String get(HttpServletRequest request, RestTemplateBuilder builder) {
+	public @ResponseBody String get(HttpServletRequest request) {
 		// Record the visit for other functions to react to.
-		/*
+		
 		CloudEvent ce = CloudEventBuilder.fromSpecVersion(SpecVersion.V1).withType("com.example.bite")
 				.withId(UUID.randomUUID().toString())
 				.withSource(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri())
@@ -39,9 +42,9 @@ public class SimpleController {
 
 		// Send as a binary HTTP request
 		RestTemplate client = builder.build();
-		client.exchange(RequestEntity.post(brokerUrl).headers(CloudEventHttpUtils.toHttp(ce)).body(ce.getData()),
+		client.exchange(RequestEntity.post(brokerUrl).headers(CloudEventHttpUtils.toHttp(ce)).body(ce.getData().toBytes()),
 				byte[].class);
-		*/
+		
 		return "done";
 	}
 
