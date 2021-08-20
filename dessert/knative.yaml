@@ -1,0 +1,21 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: dessert
+spec:
+  template:
+    spec:
+      containers:
+      - image: ekanderson/dessert
+---
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: dessert-all
+spec:
+  broker: default
+  subscriber:
+    ref:
+      apiVersion: serving.knative.dev/v1
+      kind: Service
+      name: dessert
