@@ -29,7 +29,7 @@ public class SimpleController {
 			logger.info("Failed to format JSON: %s", e.getMessage());
 		}
 
-		return "Accepted"
+		return "Accepted";
 	}
 
 };
