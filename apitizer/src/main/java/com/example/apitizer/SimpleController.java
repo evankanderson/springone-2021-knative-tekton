@@ -29,25 +29,18 @@ public class SimpleController {
 
 	@GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
 	@Autowired
-	public @ResponseBody String get(@RequestHeader("Host") String host,
-	HttpServletRequest request, 
-	 RestTemplateBuilder builder) {
+	public @ResponseBody String get(HttpServletRequest request, RestTemplateBuilder builder) {
 		// Record the visit for other functions to react to.
 		/*
-		CloudEvent ce = CloudEventBuilder.fromSpecVersion(SpecVersion.V1)
-			.withType("com.example.bite")
-			.withId(UUID.randomUUID().toString())
-			.withSource(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri())
-			.withData("text/plain", request.getRemoteHost().getBytes(StandardCharsets.UTF_8))
-			.build();
+		CloudEvent ce = CloudEventBuilder.fromSpecVersion(SpecVersion.V1).withType("com.example.bite")
+				.withId(UUID.randomUUID().toString())
+				.withSource(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri())
+				.withData("text/plain", request.getRemoteHost().getBytes(StandardCharsets.UTF_8)).build();
 
 		// Send as a binary HTTP request
 		RestTemplate client = builder.build();
-		client.exchange(
-			RequestEntity.post(brokerUrl)
-				.headers(CloudEventHttpUtils.toHttp(ce))
-				.body(ce.getData()),
-			byte[].class);
+		client.exchange(RequestEntity.post(brokerUrl).headers(CloudEventHttpUtils.toHttp(ce)).body(ce.getData()),
+				byte[].class);
 		*/
 		return "done";
 	}
