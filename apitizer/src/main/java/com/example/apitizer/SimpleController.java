@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -27,14 +26,12 @@ public class SimpleController {
 
 	static final String brokerUrl = "http://broker-ingress.knative-eventing.svc.cluster.local/default/default";
 
-@Autowired
-RestTemplateBuilder builder;
+	@Autowired
+	RestTemplateBuilder builder;
 
 	@GetMapping(value = "/", produces = MediaType.TEXT_PLAIN_VALUE)
-	@Autowired
 	public @ResponseBody String get(HttpServletRequest request) {
 		// Record the visit for other functions to react to.
-		
 		CloudEvent ce = CloudEventBuilder.fromSpecVersion(SpecVersion.V1).withType("com.example.bite")
 				.withId(UUID.randomUUID().toString())
 				.withSource(ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri())
@@ -42,9 +39,9 @@ RestTemplateBuilder builder;
 
 		// Send as a binary HTTP request
 		RestTemplate client = builder.build();
-		client.exchange(RequestEntity.post(brokerUrl).headers(CloudEventHttpUtils.toHttp(ce)).body(ce.getData().toBytes()),
+		client.exchange(
+				RequestEntity.post(brokerUrl).headers(CloudEventHttpUtils.toHttp(ce)).body(ce.getData().toBytes()),
 				byte[].class);
-		
 		return "done";
 	}
 
