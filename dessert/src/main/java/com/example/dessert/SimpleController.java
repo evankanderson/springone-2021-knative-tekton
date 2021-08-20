@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class SimpleController {
@@ -21,12 +22,14 @@ public class SimpleController {
 			.enable(SerializationFeature.INDENT_OUTPUT);
 
 	@PostMapping(value = "/")
-	public void post(@RequestBody CloudEvent event) {
+	public @ResponseBody String post(@RequestBody CloudEvent event) {
 		try {
 			logger.info(mapper.writeValueAsString(event));
 		} catch (JsonProcessingException e) {
 			logger.info("Failed to format JSON: %s", e.getMessage());
 		}
+
+		return "Accepted"
 	}
 
 };
