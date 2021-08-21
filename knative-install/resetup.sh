@@ -5,11 +5,11 @@ cd "${BASH_SOURCE%/*}/"
 
 # Start registry
 if [ "$(docker inspect -f "{{.State.Running}}" kind-registry 2>/dev/null)" != "true" ]; then
-  docker run -d --restart=always -p 127.0.0.1:5000:5000 --name kind-registry registry:2
+  docker run -d --rm -p 127.0.0.1:5000:5000 --name kind-registry registry:2
   echo "Started registry"
 fi
 
-docker network connect kind kind-registry
+docker network connect kind kind-registry || true
 
 # Document the local registry per in-flight KEP 1755
 kubectl apply -f - <<EOF
