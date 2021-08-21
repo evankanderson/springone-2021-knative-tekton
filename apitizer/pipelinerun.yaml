@@ -11,7 +11,8 @@ spec:
   workspaces:
   - name: code
     configMap:
-      name: apitizer-src  # Upload with kubectl create configmap apitizer-src --from-file=.
+      # Upload with kubectl create configmap apitizer-src --from-file=src.tar=<(tar -cf - .)
+      name: apitizer-src
   - name: intermediate-source
     volumeClaimTemplate:
       spec:
