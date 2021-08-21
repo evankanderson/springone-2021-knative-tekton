@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: apitizer-build
+spec:
+  pipelineRef:
+    name: buildpack-java
+  params:
+  - name: image
+    value: apitizer
+  workspaces:
+  - name: code
+    configMap:
+      name: apitizer-src  # Upload with kubectl create configmap apitizer-src --from-file=.
+  - name: intermediate-source
+    volumeClaimTemplate:
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 50Mi
