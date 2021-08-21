@@ -1,5 +1,7 @@
+cd "${BASH_SOURCE%/*}/"
+
 # Start KIND
-/usr/local/bin/kind create cluster --config ${HOME}/knative-install/kind.yaml
+/usr/local/bin/kind create cluster --config kind.yaml
 
 # Start registry
 if [ "$(docker inspect -f "{{.State.Running}}" kind-registry 2>/dev/null)" != "true" ]; then
