@@ -1,5 +1,7 @@
 cd "${BASH_SOURCE%/*}/"
 
+PATH=${PATH}:/usr/local/bin
+
 # Start KIND
 /usr/local/bin/kind create cluster --config kind.yaml
 
