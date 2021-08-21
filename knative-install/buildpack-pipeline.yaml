@@ -1,0 +1,101 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: unpack-source
+spec:
+  workspaces:
+  - name: source
+    description: the source directory to copy from
+  - name: dest
+    description: the destination to copy to
+  steps:
+  - name: clean
+    image: alpine
+    command: ["rm"]
+    args: ["-rf", "$(workspaces.dest.path)/src"]
+  - name: mkdir
+    image: alpine
+    command: ["mkdir"]
+    args: ["-p", "$(workspaces.dest.path)/src"]
+  - name: copy
+    image: alpine
+    command: ["tar"]
+    args: ["-xf", "$(workspaces.source.path)/src.tar", "-C", "$(workspaces.dest.path)/src"]
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: list-files
+spec:
+  workspaces:
+  - name: source
+    description: the source directory to list
+  steps:
+  - name: list
+    image: alpine
+    command: ["ls"]
+    args: ["-R", "$(workspaces.source.path)"]
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: wait
+spec:
+  steps:
+  - name: wait
+    image: alpine
+    command: ["sleep"]
+    args: ["600"]
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: buildpack-java
+spec:
+  workspaces:
+  - name: code
+  - name: intermediate-source
+  params:
+  - name: image
+    type: string
+    description: image name in local registry
+  tasks:
+  - name: unpack-source # Copy source from configMap to local PVC
+    taskRef:
+      name: unpack-source
+    workspaces:
+    - name: source
+      workspace: code
+    - name: dest
+      workspace: intermediate-source
+
+  - name: list-source
+    taskRef:
+      name: list-files
+    runAfter: ["unpack-source"]
+    workspaces:
+    - name: source
+      workspace: intermediate-source
+
+
+  - name: buildpacks # This task uses the `buildpacks` task to build the application
+    taskRef:
+      name: buildpacks
+    runAfter: ["unpack-source"]
+    workspaces:
+    - name: source
+      workspace: intermediate-source
+    params:
+    - name: APP_IMAGE
+      value: "172.18.0.4:5000/$(params.image)"
+    - name: BUILDER_IMAGE
+      value: 'paketobuildpacks/builder:base' # This is the builder we want the task to use
+    - name: SOURCE_SUBPATH
+      value: "src"
+    - name: CACHE_IMAGE
+      value: "172.18.0.4:5000/$(params.image)-cache"
+
+#  - name: wait
+#    taskRef:
+#      name: wait
+#    runAfter: ["unpack-source"]
