@@ -62,7 +62,13 @@ metadata:
   name: default
   annotations:
     eventing.knative.dev/broker.class: MTChannelBasedBroker
+spec:
+  config:
+    apiVersion: v1
+    kind: ConfigMap
+    name: config-br-default-channel
+    namespace: knative-eventing
 EOF
 
 # Start Octant in the background:
-+octant --disable-open-browser --listener-addr 0.0.0.0:8081 >&/dev/null &
+octant --disable-open-browser --listener-addr 0.0.0.0:8081 >&/dev/null &
