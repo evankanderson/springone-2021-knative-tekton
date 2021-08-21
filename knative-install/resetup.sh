@@ -45,13 +45,13 @@ kubectl apply -f https://github.com/knative/eventing/releases/download/v0.25.0/e
 kubectl apply -f https://github.com/knative/eventing/releases/download/v0.25.0/in-memory-channel.yaml
 kubectl apply -f https://github.com/knative/eventing/releases/download/v0.25.0/mt-channel-broker.yaml
 
-sleep 10  # Make sure the previous components have time to come up
+sleep 10  # Make sure the previous components have time to come up for defaulting
 # Create the default broker
 kubectl apply -f - <<EOF
 apiVersion: eventing.knative.dev/v1
 kind: Broker
 metadata:
- name: broker
+ name: default
 EOF
 
 # Set up Tekton
