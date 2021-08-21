@@ -45,17 +45,22 @@ kubectl apply -f https://github.com/knative/eventing/releases/download/v0.25.0/e
 kubectl apply -f https://github.com/knative/eventing/releases/download/v0.25.0/in-memory-channel.yaml
 kubectl apply -f https://github.com/knative/eventing/releases/download/v0.25.0/mt-channel-broker.yaml
 
+# Set up Tekton
+kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
+kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/master/task/buildpacks/0.3/buildpacks.yaml
+# Create our local buildpack
+kubectl apply -f buildpack-pipeline.yaml
+
 sleep 10  # Make sure the previous components have time to come up for defaulting
 # Create the default broker
 kubectl apply -f - <<EOF
 apiVersion: eventing.knative.dev/v1
 kind: Broker
 metadata:
- name: default
+  name: default
+  annotations:
+    eventing.knative.dev/broker.class: MTChannelBasedBroker
 EOF
 
-# Set up Tekton
-kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
-kubectl apply -f https://raw.githubusercontent.com/tektoncd/catalog/master/task/buildpacks/0.3/buildpacks.yaml
-# Create our local buildpack
-kubectl apply -f buildpack-pipeline.yaml
+# Start Octant in the background:
++octant --disable-open-browser --listener-addr 0.0.0.0:8081 >&/dev/null &
